@@ -64,17 +64,19 @@ namespace TabloidCLI
 
        public void Update(Journal journals)
         {
-
+            throw new NotImplementedException();
         }
 
        public void Delete(int id)
         {
+            throw new NotImplementedException();
 
         }
 
         public Journal Get(int id)
         {
-            
+            throw new NotImplementedException();
+
         }
     }
 }

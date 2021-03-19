@@ -15,6 +15,7 @@ namespace TabloidCLI.UserInterfaceManagers
         public JournalManager(IUserInterfaceManager parentUI, string connectionString)
         {
             _parentUI = parentUI;
+            _journalRepository = new JournalRepository(connectionString);
             _connectionString = connectionString;
         }
 
