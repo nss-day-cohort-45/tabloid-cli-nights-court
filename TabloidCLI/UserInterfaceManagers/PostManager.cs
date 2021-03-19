@@ -207,7 +207,7 @@ namespace TabloidCLI.UserInterfaceManagers
                 DateTime newDate = new DateTime();
                 string dateInput = Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(dateInput))
-                {                    
+                {                       
                     enteringDate = false;
                 } else
                 {
@@ -239,6 +239,7 @@ namespace TabloidCLI.UserInterfaceManagers
                 string input = Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(input))
                 {
+                    postToEdit.Author = authors.Find(a => a.Id == postToEdit.Author.Id);
                     enteringAuthor = false;
                 }
                 else
@@ -272,6 +273,7 @@ namespace TabloidCLI.UserInterfaceManagers
                 string input = Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(input))
                 {
+                    postToEdit.Blog = blogs.Find(b => b.Id == postToEdit.Blog.Id);
                     enteringBlog = false;
                 }
                 else

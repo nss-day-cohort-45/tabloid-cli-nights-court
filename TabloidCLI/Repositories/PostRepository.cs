@@ -17,17 +17,29 @@ namespace TabloidCLI
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT Title, URL
+                    cmd.CommandText = @"SELECT Title, URL, PublishDateTime, AuthorId, BlogId, Id
                                             FROM Post";
 
                     List<Post> posts = new List<Post>();
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
+                        int authorId = reader.GetInt32(reader.GetOrdinal("AuthorId"));
+                        int blogId = reader.GetInt32(reader.GetOrdinal("BlogId"));
                         Post post = new Post()
                         {
                             Title = reader.GetString(reader.GetOrdinal("Title")),
-                            Url = reader.GetString(reader.GetOrdinal("URL"))
+                            Url = reader.GetString(reader.GetOrdinal("URL")),
+                            PublishDateTime = reader.GetDateTime(reader.GetOrdinal("PublishDateTime")),
+                            Author = new Author()
+                            {
+                                Id = authorId
+                            },
+                            Blog = new Blog()
+                            {
+                                Id = blogId
+                            },
+                            Id = reader.GetInt32(reader.GetOrdinal("Id"))                            
                         };
                         posts.Add(post);
                     }
