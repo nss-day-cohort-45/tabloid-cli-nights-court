@@ -21,6 +21,7 @@ namespace TabloidCLI.UserInterfaceManagers
 
             Console.Write("> ");
             string choice = Console.ReadLine();
+            Console.Clear();
             switch (choice)
             {
                 case "1": return new JournalManager(this, CONNECTION_STRING);
