@@ -112,6 +112,7 @@ namespace TabloidCLI.UserInterfaceManagers
             Blog blog = new Blog();
 
             Console.Write("Title: ");
+
             blog.Title = Console.ReadLine();
 
             Console.Write("URL: ");
@@ -133,13 +134,13 @@ namespace TabloidCLI.UserInterfaceManagers
             }
 
             Console.WriteLine();
-            Console.Write("New blog title (blank to leave unchanged: ");
+            Console.Write("New blog title (blank to leave unchanged): ");
             string title = Console.ReadLine();
             if (!string.IsNullOrWhiteSpace(title))
             {
                 blogToEdit.Title = title;
             }
-            Console.Write("New URL (blank to leave unchanged: ");
+            Console.Write("New URL (blank to leave unchanged): ");
             string url = Console.ReadLine();
             if (!string.IsNullOrWhiteSpace(url))
             {
