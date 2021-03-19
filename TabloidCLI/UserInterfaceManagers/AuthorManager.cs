@@ -103,7 +103,7 @@ namespace TabloidCLI.UserInterfaceManagers
                 int choice = int.Parse(input);
                 return authors[choice - 1];
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Console.Clear();
                 Console.WriteLine("Invalid Selection");
