@@ -60,10 +60,11 @@ namespace TabloidCLI.UserInterfaceManagers
         {
             Console.Clear();
             Console.WriteLine("------Blogs------");
+            Console.WriteLine();
             List<Blog> blogs = _blogRepository.GetAll();
             foreach (Blog blog in blogs)
             {
-                Console.WriteLine($"Title: {blog.Title} - Url: {blog.Url}");
+                Console.WriteLine($"Title: {blog.Title} - URL: {blog.Url}");
                 Console.WriteLine();
             }
             Console.WriteLine("-------------------");
