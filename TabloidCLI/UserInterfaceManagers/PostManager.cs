@@ -90,7 +90,7 @@ namespace TabloidCLI.UserInterfaceManagers
 
             bool enteringDate = true;
             while (enteringDate)
-            {                
+            {
                 Console.Write("Post publication date (mm/dd/yyyy): ");
                 string dateInput = Console.ReadLine();
                 try
@@ -174,11 +174,89 @@ namespace TabloidCLI.UserInterfaceManagers
         }
         private void Edit()
         {
+            Console.Clear();
+            Post postToEdit = Choose("Which post would you like to edit?");
+            if (postToEdit == null)
+            {
+                return;
+            }
 
+            Console.WriteLine();
+            Console.Write("New title (blank to leave unchanged: ");
+            string newTitle = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(newTitle))
+            {
+                postToEdit.Title = newTitle;
+            }
+
+            Console.Write("New URL (blank to leave unchanged: ");
+            string newUrl = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(newUrl))
+            {
+                postToEdit.Url = newUrl;
+            }
+
+            bool enteringDate = true;
+            while (enteringDate)
+            {
+                Console.Write("New post publication date (mm/dd/yyyy) - blank to leave unchanged: ");
+                DateTime newDate = new DateTime();
+                string dateInput = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(dateInput))
+                {
+                    enteringDate = false;
+                } else
+                {
+                    try
+                    {
+                        newDate = DateTime.Parse(dateInput);
+                        postToEdit.PublishDateTime = newDate;
+                        enteringDate = false;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Invalid date");
+                    }
+                }
+            }
         }
         private void Remove()
         {
 
+        }
+        private Post Choose(string prompt = null)
+        {
+            Console.Clear();
+            if (prompt == null)
+            {
+                prompt = "Please choose a Post:";
+            }
+
+            Console.WriteLine(prompt);
+
+            List<Post> posts = _postRepository.GetAll();
+
+            for (int i = 0; i < posts.Count; i++)
+            {
+                Post post = posts[i];
+                Console.WriteLine($" {i + 1}) {post.Title}");
+            }
+            Console.Write("> ");
+
+            string input = Console.ReadLine();
+            try
+            {
+                Console.Clear();
+                int choice = int.Parse(input);
+                return posts[choice - 1];
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine("Invalid Selection");
+                return null;
+            }
         }
     }
 }
