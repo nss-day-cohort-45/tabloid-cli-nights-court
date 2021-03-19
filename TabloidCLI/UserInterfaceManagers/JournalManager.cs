@@ -67,7 +67,25 @@ namespace TabloidCLI.UserInterfaceManagers
 
         private void Add()
         {
+            List<Journal> journals = _journalRepository.GetAll();
 
+            Journal journalEntry = null;
+            DateTime journalDate = new DateTime();
+
+            Console.Clear();
+            Console.Write("Journal title: ");
+            string journalTitle = Console.ReadLine();
+
+            Console.Clear();
+            Console.Write("Journal Content: ");
+            string journalContent = Console.ReadLine();
+
+           
+            _journalRepository.Insert(journalEntry);
+
+            Console.Clear();
+            Console.WriteLine($"\"{journalEntry.Title}\" was successfully added!");
+            Console.WriteLine();
         }
         private void Edit()
         {
