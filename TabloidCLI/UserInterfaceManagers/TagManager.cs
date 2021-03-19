@@ -127,8 +127,6 @@ namespace TabloidCLI.UserInterfaceManagers
             if (!string.IsNullOrWhiteSpace(name))
             {
                 tagToEdit.Name = name;
-                Console.WriteLine(tagToEdit.Name);
-                Console.WriteLine(tagToEdit.Id);
             }
 
             _tagRepository.Update(tagToEdit);
