@@ -10,13 +10,17 @@ namespace TabloidCLI.UserInterfaceManagers
     {
         private readonly IUserInterfaceManager _parentUI;
         private PostRepository _postRepository;
+        private AuthorRepository _authorRepository;
         private string _connectionString;
+        // private BlogRepository _blogRepository;
 
         public PostManager(IUserInterfaceManager parentUI, string connectionString)
         {
             _parentUI = parentUI;
             _postRepository = new PostRepository(connectionString);
+            _authorRepository = new AuthorRepository(connectionString);
             _connectionString = connectionString;
+            //_blogRepository = new BlogRespository(connectionString);
         }
         public IUserInterfaceManager Execute()
         {
@@ -69,7 +73,107 @@ namespace TabloidCLI.UserInterfaceManagers
 
         private void Add()
         {
+            List<Author> authors = _authorRepository.GetAll();
+            //List<Blog> blogs = _blogRepository.GetAll();
 
+            Author postAuthor = null;
+            //Blog postBlog = null;
+            DateTime postDate = new DateTime();
+
+            Console.Clear();
+            Console.Write("Post title: ");
+            string postTitle = Console.ReadLine();
+
+            Console.Clear();
+            Console.Write("Post url: ");
+            string postUrl = Console.ReadLine();
+
+            bool enteringDate = true;
+            while (enteringDate)
+            {                
+                Console.Write("Post publication date (mm/dd/yyyy): ");
+                string dateInput = Console.ReadLine();
+                try
+                {
+                    postDate = DateTime.Parse(dateInput);
+                    enteringDate = false;
+                }
+                catch (Exception ex)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid date");
+                }
+            }
+
+            Console.WriteLine(postDate);
+
+
+            bool enteringAuthor = true;
+            while (enteringAuthor)
+            {
+                Console.WriteLine("Please choose the post's Author:");
+
+                for (int i = 0; i < authors.Count; i++)
+                {
+                    Author author = authors[i];
+                    Console.WriteLine($"{author.Id} - {author.FullName}");
+                }
+                Console.Write("> ");
+                string input = Console.ReadLine();
+                try
+                {
+                    Console.Clear();
+                    int choice = int.Parse(input);
+                    postAuthor = authors.Find(a => a.Id == choice);
+                    enteringAuthor = false;
+                }
+                catch (Exception ex)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid Selection");
+                }
+            }
+
+            //bool enteringBlog = true;
+            //while (enteringBlog)
+            //{
+            //    Console.WriteLine("Please choose the post's Blog:");
+
+            //    for (int i = 0; i < blogs.Count; i++)
+            //    {
+            //        Blog blog = blogs[i];
+            //        Console.WriteLine($"{blog.Id} - {blog.Title}");
+            //    }
+            //    Console.Write("> ");
+            //    string input = Console.ReadLine();
+            //    try
+            //    {
+            //        Console.Clear();
+            //        int choice = int.Parse(input);
+            //        postBlog = blogs.Find(b => b.Id == choice);
+            //        enteringBlog = false;
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        Console.Clear();
+            //        Console.WriteLine("Invalid Selection");
+            //    }
+            //}
+
+            Post newPost = new Post()
+            {
+                Title = postTitle,
+                Url = postUrl,
+                //Blog = postBlog,
+                Author = postAuthor,
+                PublishDateTime = postDate
+            };
+
+            _postRepository.Insert(newPost);
+
+            Console.Clear();
+            Console.WriteLine($"\"{newPost.Title}\" was successfully added!");
+            Console.WriteLine();
         }
         private void Edit()
         {
