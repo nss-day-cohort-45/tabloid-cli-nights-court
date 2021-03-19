@@ -186,14 +186,14 @@ namespace TabloidCLI.UserInterfaceManagers
             }
 
             Console.WriteLine();
-            Console.Write("New title (blank to leave unchanged: ");
+            Console.Write("New title (blank to leave unchanged): ");
             string newTitle = Console.ReadLine();
             if (!string.IsNullOrWhiteSpace(newTitle))
             {
                 postToEdit.Title = newTitle;
             }
 
-            Console.Write("New URL (blank to leave unchanged: ");
+            Console.Write("New URL (blank to leave unchanged): ");
             string newUrl = Console.ReadLine();
             if (!string.IsNullOrWhiteSpace(newUrl))
             {
@@ -291,6 +291,11 @@ namespace TabloidCLI.UserInterfaceManagers
                     }
                 }
             }
+
+            _postRepository.Update(postToEdit);
+            Console.Clear();
+            Console.WriteLine($"Post \"{postToEdit.Title}\" was successfully edited.");
+            Console.WriteLine();
         }
         private void Remove()
         {

@@ -130,10 +130,10 @@ namespace TabloidCLI
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"Update Post
-                                            SET Title = @title
-                                                URL = @url
-                                                PublishDateTime = @publishDateTime
-                                                AuthorId = @authorId
+                                            SET Title = @title,
+                                                URL = @url,
+                                                PublishDateTime = @publishDateTime,
+                                                AuthorId = @authorId,
                                                 BlogId = @blogId
                                             WHERE id = @id";
                     cmd.Parameters.AddWithValue("@title", post.Title);
@@ -141,6 +141,7 @@ namespace TabloidCLI
                     cmd.Parameters.AddWithValue("@publishDateTime", post.PublishDateTime);
                     cmd.Parameters.AddWithValue("@authorId", post.Author.Id);
                     cmd.Parameters.AddWithValue("@blogId", post.Blog.Id);
+                    cmd.Parameters.AddWithValue("@id", post.Id);
 
                     cmd.ExecuteNonQuery();
                 }
