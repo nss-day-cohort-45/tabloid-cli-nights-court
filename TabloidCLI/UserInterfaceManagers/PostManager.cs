@@ -175,6 +175,10 @@ namespace TabloidCLI.UserInterfaceManagers
         private void Edit()
         {
             Console.Clear();
+
+            List<Author> authors = _authorRepository.GetAll();
+            List<Blog> blogs = _blogRepository.GetAll();
+
             Post postToEdit = Choose("Which post would you like to edit?");
             if (postToEdit == null)
             {
@@ -203,7 +207,7 @@ namespace TabloidCLI.UserInterfaceManagers
                 DateTime newDate = new DateTime();
                 string dateInput = Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(dateInput))
-                {
+                {                    
                     enteringDate = false;
                 } else
                 {
@@ -217,6 +221,73 @@ namespace TabloidCLI.UserInterfaceManagers
                     {
                         Console.Clear();
                         Console.WriteLine("Invalid date");
+                    }
+                }
+            }
+
+            bool enteringAuthor = true;
+            while (enteringAuthor)
+            {
+                Console.WriteLine("Please choose the post's Author (blank to leave unchanged):");
+
+                for (int i = 0; i < authors.Count; i++)
+                {
+                    Author author = authors[i];
+                    Console.WriteLine($"{author.Id} - {author.FullName}");
+                }
+                Console.Write("> ");
+                string input = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(input))
+                {
+                    enteringAuthor = false;
+                }
+                else
+                {
+                    try
+                    {
+                        Console.Clear();
+                        int choice = int.Parse(input);
+                        postToEdit.Author = authors.Find(a => a.Id == choice);
+                        enteringAuthor = false;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Invalid Selection");
+                    }
+                }
+            }
+
+            bool enteringBlog = true;
+            while (enteringBlog)
+            {
+                Console.WriteLine("Please choose the post's Blog (blank to leave unchanged):");
+
+                for (int i = 0; i < blogs.Count; i++)
+                {
+                    Blog blog = blogs[i];
+                    Console.WriteLine($"{blog.Id} - {blog.Title}");
+                }
+                Console.Write("> ");
+                string input = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(input))
+                {
+                    enteringBlog = false;
+                }
+                else
+                {
+
+                    try
+                    {
+                        Console.Clear();
+                        int choice = int.Parse(input);
+                        postToEdit.Blog = blogs.Find(b => b.Id == choice);
+                        enteringBlog = false;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Invalid Selection");
                     }
                 }
             }
