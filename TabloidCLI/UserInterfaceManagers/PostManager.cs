@@ -11,8 +11,8 @@ namespace TabloidCLI.UserInterfaceManagers
         private readonly IUserInterfaceManager _parentUI;
         private PostRepository _postRepository;
         private AuthorRepository _authorRepository;
+        private BlogRepository _blogRepository;
         private string _connectionString;
-        // private BlogRepository _blogRepository;
 
         public PostManager(IUserInterfaceManager parentUI, string connectionString)
         {
@@ -20,7 +20,7 @@ namespace TabloidCLI.UserInterfaceManagers
             _postRepository = new PostRepository(connectionString);
             _authorRepository = new AuthorRepository(connectionString);
             _connectionString = connectionString;
-            //_blogRepository = new BlogRespository(connectionString);
+            _blogRepository = new BlogRepository(connectionString);
         }
         public IUserInterfaceManager Execute()
         {
@@ -74,10 +74,10 @@ namespace TabloidCLI.UserInterfaceManagers
         private void Add()
         {
             List<Author> authors = _authorRepository.GetAll();
-            //List<Blog> blogs = _blogRepository.GetAll();
+            List<Blog> blogs = _blogRepository.GetAll();
 
             Author postAuthor = null;
-            //Blog postBlog = null;
+            Blog postBlog = null;
             DateTime postDate = new DateTime();
 
             Console.Clear();
@@ -105,9 +105,6 @@ namespace TabloidCLI.UserInterfaceManagers
                 }
             }
 
-            Console.WriteLine(postDate);
-
-
             bool enteringAuthor = true;
             while (enteringAuthor)
             {
@@ -134,37 +131,37 @@ namespace TabloidCLI.UserInterfaceManagers
                 }
             }
 
-            //bool enteringBlog = true;
-            //while (enteringBlog)
-            //{
-            //    Console.WriteLine("Please choose the post's Blog:");
+            bool enteringBlog = true;
+            while (enteringBlog)
+            {
+                Console.WriteLine("Please choose the post's Blog:");
 
-            //    for (int i = 0; i < blogs.Count; i++)
-            //    {
-            //        Blog blog = blogs[i];
-            //        Console.WriteLine($"{blog.Id} - {blog.Title}");
-            //    }
-            //    Console.Write("> ");
-            //    string input = Console.ReadLine();
-            //    try
-            //    {
-            //        Console.Clear();
-            //        int choice = int.Parse(input);
-            //        postBlog = blogs.Find(b => b.Id == choice);
-            //        enteringBlog = false;
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        Console.Clear();
-            //        Console.WriteLine("Invalid Selection");
-            //    }
-            //}
+                for (int i = 0; i < blogs.Count; i++)
+                {
+                    Blog blog = blogs[i];
+                    Console.WriteLine($"{blog.Id} - {blog.Title}");
+                }
+                Console.Write("> ");
+                string input = Console.ReadLine();
+                try
+                {
+                    Console.Clear();
+                    int choice = int.Parse(input);
+                    postBlog = blogs.Find(b => b.Id == choice);
+                    enteringBlog = false;
+                }
+                catch (Exception ex)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid Selection");
+                }
+            }
 
             Post newPost = new Post()
             {
                 Title = postTitle,
                 Url = postUrl,
-                //Blog = postBlog,
+                Blog = postBlog,
                 Author = postAuthor,
                 PublishDateTime = postDate
             };
