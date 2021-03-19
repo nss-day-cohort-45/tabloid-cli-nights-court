@@ -61,5 +61,20 @@ namespace TabloidCLI
                 }
             }
         }
+
+       public void Update(Journal journals)
+        {
+
+        }
+
+       public void Delete(int id)
+        {
+
+        }
+
+        public Journal Get(int id)
+        {
+            
+        }
     }
 }
