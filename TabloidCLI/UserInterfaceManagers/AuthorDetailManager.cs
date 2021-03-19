@@ -24,7 +24,6 @@ namespace TabloidCLI.UserInterfaceManagers
 
         public IUserInterfaceManager Execute()
         {
-            Console.Clear();
             Author author = _authorRepository.Get(_authorId);
             Console.WriteLine($"{author.FullName} Details");
             Console.WriteLine(" 1) View");
@@ -50,6 +49,7 @@ namespace TabloidCLI.UserInterfaceManagers
                     RemoveTag();
                     return this;
                 case "0":
+                    Console.Clear();
                     return _parentUI;
                 default:
                     Console.WriteLine("Invalid Selection");
@@ -67,7 +67,8 @@ namespace TabloidCLI.UserInterfaceManagers
             {
                 Console.WriteLine(" " + tag);
             }
-            Console.WriteLine();
+            Console.ReadLine();
+            Console.Clear();
         }
 
         private void ViewBlogPosts()
@@ -75,9 +76,15 @@ namespace TabloidCLI.UserInterfaceManagers
             List<Post> posts = _postRepository.GetByAuthor(_authorId);
             foreach (Post post in posts)
             {
-                Console.WriteLine(post);
+                Console.WriteLine("---------------------------");
+                Console.WriteLine($"Title: {post.Title}");
+                Console.WriteLine($"URL: {post.Url}");
+                Console.WriteLine($"Published: {post.PublishDateTime}");
+                Console.WriteLine("---------------------------");
+                Console.WriteLine();
             }
-            Console.WriteLine();
+            Console.ReadLine();
+            Console.Clear();
         }
 
         private void AddTag()
@@ -100,10 +107,15 @@ namespace TabloidCLI.UserInterfaceManagers
                 int choice = int.Parse(input);
                 Tag tag = tags[choice - 1];
                 _authorRepository.InsertTag(author, tag);
+                Console.WriteLine($"Successfully added ({tag.Name}) tag to {author.FirstName} {author.LastName}");
+                Console.ReadLine();
+                Console.Clear();
             }
             catch (Exception)
             {
                 Console.WriteLine("Invalid Selection. Won't add any tags.");
+                Console.ReadLine();
+                Console.Clear();
             }
         }
 
@@ -127,10 +139,15 @@ namespace TabloidCLI.UserInterfaceManagers
                 int choice = int.Parse(input);
                 Tag tag = tags[choice - 1];
                 _authorRepository.DeleteTag(author.Id, tag.Id);
+                Console.WriteLine($"Successfully removed ({tag.Name}) tag from {author.FirstName} {author.LastName}");
+                Console.ReadLine();
+                Console.Clear();
             }
             catch (Exception)
             {
                 Console.WriteLine("Invalid Selection. Won't remove any tags.");
+                Console.ReadLine();
+                Console.Clear();
             }
         }
     }
