@@ -46,24 +46,67 @@ namespace TabloidCLI.UserInterfaceManagers
                     Remove();
                     return this;
                 case "0":
+                    Console.Clear();
                     return _parentUI;
                 default:
+                    Console.Clear();
                     Console.WriteLine("Invalid Selection");
+                    Console.WriteLine();
                     return this;
             }
         }
 
         private void List()
         {
-            List<Author> blogs = _blogRepository.GetAll();
+            Console.Clear();
+            Console.WriteLine("------Blogs------");
+            List<Blog> blogs = _blogRepository.GetAll();
             foreach (Blog blog in blogs)
             {
-                Console.WriteLine(blog);
+                Console.WriteLine($"Title: {blog.Title} - Url: {blog.Url}");
+                Console.WriteLine();
+            }
+            Console.WriteLine("-------------------");
+            Console.WriteLine();
+        }
+
+        private Blog Choose(string prompt = null)
+        {
+            Console.Clear();
+            if (prompt == null)
+            {
+                prompt = "Please choose an Blog:";
+            }
+
+            Console.WriteLine(prompt);
+
+            List<Blog> blogs = _blogRepository.GetAll();
+
+            for (int i = 0; i < blogs.Count; i++)
+            {
+                Blog blog = blogs[i];
+                Console.WriteLine($" {i + 1}) {blog.Title}");
+            }
+            Console.Write("> ");
+
+            string input = Console.ReadLine();
+            try
+            {
+                Console.Clear();
+                int choice = int.Parse(input);
+                return blogs[choice - 1];
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine("Invalid Selection");
+                return null;
             }
         }
 
         private void Add()
         {
+            Console.Clear();
             Console.WriteLine("New Blog");
             Blog blog = new Blog();
 
@@ -74,6 +117,10 @@ namespace TabloidCLI.UserInterfaceManagers
             blog.Url = Console.ReadLine();
 
             _blogRepository.Insert(blog);
+
+            Console.Clear();
+            Console.WriteLine($"{blog.Title} : {blog.Url} was successfully added!");
+            Console.WriteLine();
         }
 
         private void Edit()
@@ -99,6 +146,10 @@ namespace TabloidCLI.UserInterfaceManagers
             }
 
             _blogRepository.Update(blogToEdit);
+
+            Console.Clear();
+            Console.WriteLine($"{blogToEdit.Title} : {blogToEdit.Url} was successfully edited.");
+            Console.WriteLine();
         }
 
         private void Remove()
@@ -108,6 +159,9 @@ namespace TabloidCLI.UserInterfaceManagers
             {
                 _blogRepository.Delete(blogToDelete.Id);
             }
+            Console.Clear();
+            Console.WriteLine($"{blogToDelete.Title} : {blogToDelete.Url} was successfully removed.");
+            Console.WriteLine();
         }
     }
 }
