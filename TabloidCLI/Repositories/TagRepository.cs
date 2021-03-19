@@ -78,7 +78,6 @@ namespace TabloidCLI
                 }
             }
         }
-
         public void Delete(int id)
         {
             throw new NotImplementedException();
