@@ -62,6 +62,21 @@ namespace TabloidCLI.UserInterfaceManagers
             Console.WriteLine("----------------");
             Console.WriteLine();
         }
+        private void Add()
+        {
+            Console.Clear();
+            Console.WriteLine("New Tag");
+            Tag tag = new Tag();
+
+            Console.Write("Tag Name: ");
+            tag.Name = Console.ReadLine();
+
+            _tagRepository.Insert(tag);
+
+            Console.Clear();
+            Console.WriteLine($"The ({tag.Name}) tag was successfully added!");
+            Console.WriteLine();
+        }
 
         private Tag Choose(string prompt = null)
         {
@@ -89,28 +104,12 @@ namespace TabloidCLI.UserInterfaceManagers
                 int choice = int.Parse(input);
                 return tags[choice - 1];
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Console.Clear();
                 Console.WriteLine("Invalid Selection");
                 return null;
             }
-        }
-
-        private void Add()
-        {
-            Console.Clear();
-            Console.WriteLine("New Tag");
-            Tag tag = new Tag();
-
-            Console.Write("Tag Name: ");
-            tag.Name = Console.ReadLine();
-
-            _tagRepository.Insert(tag);
-
-            Console.Clear();
-            Console.WriteLine($"The ({tag.Name}) tag was successfully added!");
-            Console.WriteLine();
         }
 
         private void Edit()
@@ -128,6 +127,8 @@ namespace TabloidCLI.UserInterfaceManagers
             if (!string.IsNullOrWhiteSpace(name))
             {
                 tagToEdit.Name = name;
+                Console.WriteLine(tagToEdit.Name);
+                Console.WriteLine(tagToEdit.Id);
             }
 
             _tagRepository.Update(tagToEdit);
