@@ -54,24 +54,32 @@ namespace TabloidCLI.UserInterfaceManagers
                     Remove();
                     return this;
                 case "0":
+                    Console.Clear();
                     return _parentUI;
                 default:
+                    Console.Clear();
                     Console.WriteLine("Invalid Selection");
+                    Console.WriteLine();
                     return this;
             }
         }
 
         private void List()
         {
+            Console.Clear();
+            Console.WriteLine("------Authors------");
             List<Author> authors = _authorRepository.GetAll();
             foreach (Author author in authors)
             {
                 Console.WriteLine(author);
             }
+            Console.WriteLine("-------------------");
+            Console.WriteLine();
         }
 
         private Author Choose(string prompt = null)
         {
+            Console.Clear();
             if (prompt == null)
             {
                 prompt = "Please choose an Author:";
@@ -91,11 +99,13 @@ namespace TabloidCLI.UserInterfaceManagers
             string input = Console.ReadLine();
             try
             {
+                Console.Clear();
                 int choice = int.Parse(input);
                 return authors[choice - 1];
             }
             catch (Exception ex)
             {
+                Console.Clear();
                 Console.WriteLine("Invalid Selection");
                 return null;
             }
@@ -103,6 +113,7 @@ namespace TabloidCLI.UserInterfaceManagers
 
         private void Add()
         {
+            Console.Clear();
             Console.WriteLine("New Author");
             Author author = new Author();
 
@@ -116,10 +127,15 @@ namespace TabloidCLI.UserInterfaceManagers
             author.Bio = Console.ReadLine();
 
             _authorRepository.Insert(author);
+
+            Console.Clear();
+            Console.WriteLine($"{author.FirstName} {author.LastName} was successfully added!");
+            Console.WriteLine();
         }
 
         private void Edit()
         {
+            Console.Clear();
             Author authorToEdit = Choose("Which author would you like to edit?");
             if (authorToEdit == null)
             {
@@ -127,19 +143,19 @@ namespace TabloidCLI.UserInterfaceManagers
             }
 
             Console.WriteLine();
-            Console.Write("New first name (blank to leave unchanged: ");
+            Console.Write("New first name (blank to leave unchanged): ");
             string firstName = Console.ReadLine();
             if (!string.IsNullOrWhiteSpace(firstName))
             {
                 authorToEdit.FirstName = firstName;
             }
-            Console.Write("New last name (blank to leave unchanged: ");
+            Console.Write("New last name (blank to leave unchanged): ");
             string lastName = Console.ReadLine();
             if (!string.IsNullOrWhiteSpace(lastName))
             {
                 authorToEdit.LastName = lastName;
             }
-            Console.Write("New bio (blank to leave unchanged: ");
+            Console.Write("New bio (blank to leave unchanged): ");
             string bio = Console.ReadLine();
             if (!string.IsNullOrWhiteSpace(bio))
             {
@@ -147,15 +163,22 @@ namespace TabloidCLI.UserInterfaceManagers
             }
 
             _authorRepository.Update(authorToEdit);
+            Console.Clear();
+            Console.WriteLine($"{authorToEdit.FirstName} {authorToEdit.LastName} was successfully edited.");
+            Console.WriteLine();
         }
 
         private void Remove()
         {
+            Console.Clear();
             Author authorToDelete = Choose("Which author would you like to remove?");
             if (authorToDelete != null)
             {
                 _authorRepository.Delete(authorToDelete.Id);
             }
+            Console.Clear();
+            Console.WriteLine($"{authorToDelete.FirstName} {authorToDelete.LastName} was successfully removed.");
+            Console.WriteLine();
         }
     }
 }
