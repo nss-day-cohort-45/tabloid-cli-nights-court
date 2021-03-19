@@ -60,7 +60,7 @@ namespace TabloidCLI.UserInterfaceManagers
             Console.WriteLine("");
             foreach (Journal journal in journals)
             {
-                Console.WriteLine($"Title: {journal.Title} - Content: {journal.Content} - DateTime: {journal.CreateDateTime}");
+                Console.WriteLine($"  Title: {journal.Title} - Content: {journal.Content} - DateTime: {journal.CreateDateTime}");
             }
             Console.WriteLine("");
         }
@@ -69,17 +69,16 @@ namespace TabloidCLI.UserInterfaceManagers
         {
             List<Journal> journals = _journalRepository.GetAll();
 
-            Journal journalEntry = null;
-            DateTime journalDate = new DateTime();
+            Journal journalEntry = new Journal();
+            journalEntry.CreateDateTime = DateTime.Now;
 
             Console.Clear();
             Console.Write("Journal title: ");
-            string journalTitle = Console.ReadLine();
+            journalEntry.Title = Console.ReadLine();
 
             Console.Clear();
             Console.Write("Journal Content: ");
-            string journalContent = Console.ReadLine();
-
+            journalEntry.Content = Console.ReadLine();
            
             _journalRepository.Insert(journalEntry);
 
