@@ -79,14 +79,10 @@ namespace TabloidCLI.UserInterfaceManagers
             Author postAuthor = null;
             Blog postBlog = null;
             DateTime postDate = new DateTime();
-
             Console.Clear();
-            Console.Write("Post title: ");
-            string postTitle = Console.ReadLine();
-
+            string postTitle = StringPrompt("Post title: ");
             Console.Clear();
-            Console.Write("Post url: ");
-            string postUrl = Console.ReadLine();
+            string postUrl = StringPrompt("Post url: ");
 
             bool enteringDate = true;
             while (enteringDate)
@@ -114,9 +110,8 @@ namespace TabloidCLI.UserInterfaceManagers
                 {
                     Author author = authors[i];
                     Console.WriteLine($"{author.Id} - {author.FullName}");
-                }
-                Console.Write("> ");
-                string input = Console.ReadLine();
+                }                
+                string input = StringPrompt("> ");
                 try
                 {
                     Console.Clear();
@@ -176,8 +171,6 @@ namespace TabloidCLI.UserInterfaceManagers
         {
             Console.Clear();
 
-            List<Author> authors = _authorRepository.GetAll();
-            List<Blog> blogs = _blogRepository.GetAll();
 
             Post postToEdit = Choose("Which post would you like to edit?");
             if (postToEdit == null)
@@ -185,16 +178,14 @@ namespace TabloidCLI.UserInterfaceManagers
                 return;
             }
 
-            Console.WriteLine();
-            Console.Write("New title (blank to leave unchanged): ");
-            string newTitle = Console.ReadLine();
+            Console.WriteLine();            
+            string newTitle = StringPrompt("New title (blank to leave unchanged): ");
             if (!string.IsNullOrWhiteSpace(newTitle))
             {
                 postToEdit.Title = newTitle;
             }
 
-            Console.Write("New URL (blank to leave unchanged): ");
-            string newUrl = Console.ReadLine();
+            string newUrl = StringPrompt("New URL (blank to leave unchanged): ");
             if (!string.IsNullOrWhiteSpace(newUrl))
             {
                 postToEdit.Url = newUrl;
@@ -203,13 +194,13 @@ namespace TabloidCLI.UserInterfaceManagers
             bool enteringDate = true;
             while (enteringDate)
             {
-                Console.Write("New post publication date (mm/dd/yyyy) - blank to leave unchanged: ");
-                DateTime newDate = new DateTime();
-                string dateInput = Console.ReadLine();
+                DateTime newDate = new DateTime();                
+                string dateInput = StringPrompt("New post publication date (mm/dd/yyyy) - blank to leave unchanged: ");
                 if (string.IsNullOrWhiteSpace(dateInput))
-                {                       
+                {
                     enteringDate = false;
-                } else
+                }
+                else
                 {
                     try
                     {
@@ -226,6 +217,7 @@ namespace TabloidCLI.UserInterfaceManagers
             }
 
             bool enteringAuthor = true;
+            List<Author> authors = _authorRepository.GetAll();
             while (enteringAuthor)
             {
                 Console.WriteLine("Please choose the post's Author (blank to leave unchanged):");
@@ -235,11 +227,10 @@ namespace TabloidCLI.UserInterfaceManagers
                     Author author = authors[i];
                     Console.WriteLine($"{author.Id} - {author.FullName}");
                 }
-                Console.Write("> ");
-                string input = Console.ReadLine();
+                
+                string input = StringPrompt("> ");
                 if (string.IsNullOrWhiteSpace(input))
-                {
-                    postToEdit.Author = authors.Find(a => a.Id == postToEdit.Author.Id);
+                {                    
                     enteringAuthor = false;
                 }
                 else
@@ -260,6 +251,7 @@ namespace TabloidCLI.UserInterfaceManagers
             }
 
             bool enteringBlog = true;
+            List<Blog> blogs = _blogRepository.GetAll();
             while (enteringBlog)
             {
                 Console.WriteLine("Please choose the post's Blog (blank to leave unchanged):");
@@ -273,7 +265,6 @@ namespace TabloidCLI.UserInterfaceManagers
                 string input = Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(input))
                 {
-                    postToEdit.Blog = blogs.Find(b => b.Id == postToEdit.Blog.Id);
                     enteringBlog = false;
                 }
                 else
@@ -335,6 +326,16 @@ namespace TabloidCLI.UserInterfaceManagers
                 Console.WriteLine("Invalid Selection");
                 return null;
             }
+        }
+        /// <summary>
+        /// prints the message parameter 
+        /// as a prompt for the user, returns user input as a string
+        /// </summary>
+        private string StringPrompt(string message)
+        {
+            Console.Write(message);
+            string output = Console.ReadLine();
+            return output;
         }
     }
 }
