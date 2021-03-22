@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using Microsoft.Data.SqlClient;
 using TabloidCLI.Models;
 using TabloidCLI.Repositories;
 
@@ -90,9 +90,52 @@ namespace TabloidCLI.UserInterfaceManagers
         {
 
         }
+
+        private Journal Choose(string prompt = null)
+        {
+            Console.Clear();
+            if (prompt == null)
+            {
+                prompt = "Please choose a Journal Entry :";
+            }
+
+            Console.WriteLine(prompt);
+
+            List<Journal> journals = _journalRepository.GetAll();
+
+            for (int i = 0; i < journals.Count; i++)
+            {
+                Journal journal = journals[i];
+                Console.WriteLine($" {i + 1}) {journal.Title}");
+            }
+            Console.Write("> ");
+
+            string input = Console.ReadLine();
+            try
+            {
+                Console.Clear();
+                int choice = int.Parse(input);
+                return journals[choice - 1];
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine("Invalid Selection");
+                return null;
+            }
+        }
+
         private void Remove()
         {
-
+            Console.Clear();
+            Journal JournalEntryToDelete = Choose("Which Journal Entry would you like to remove?");
+            if (JournalEntryToDelete != null)
+            {
+                _journalRepository.Delete(JournalEntryToDelete.Id);
+            }
+            Console.Clear();
+            Console.WriteLine($"{JournalEntryToDelete.Title} : {JournalEntryToDelete.CreateDateTime} was successfully removed.");
+            Console.WriteLine();
         }
     }
     
