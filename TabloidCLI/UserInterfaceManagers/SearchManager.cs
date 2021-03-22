@@ -35,6 +35,7 @@ namespace TabloidCLI.UserInterfaceManagers
                 case "3":
                     return this;
                 case "4":
+                    SearchAll();
                     return this;
                 case "0":
                     return _parentUI;
@@ -45,6 +46,22 @@ namespace TabloidCLI.UserInterfaceManagers
         }
 
         private void SearchAuthors()
+        {
+            Console.Write("Tag> ");
+            string tagName = Console.ReadLine();
+
+            SearchResults<Author> results = _tagRepository.SearchAuthors(tagName);
+
+            if (results.NoResultsFound)
+            {
+                Console.WriteLine($"No results for {tagName}");
+            }
+            else
+            {
+                results.Display();
+            }
+        }
+        private void SearchAll()
         {
             Console.Write("Tag> ");
             string tagName = Console.ReadLine();
