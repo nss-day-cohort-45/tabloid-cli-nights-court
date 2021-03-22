@@ -37,6 +37,7 @@ namespace TabloidCLI.UserInterfaceManagers
                     SearchPosts();
                     return this;
                 case "4":
+                    SearchAll();
                     return this;
                 case "0":
                     return _parentUI;
@@ -59,6 +60,7 @@ namespace TabloidCLI.UserInterfaceManagers
             }
             else
             {
+                Console.WriteLine("Search Results");
                 results.Display();
             }
         }
@@ -76,6 +78,7 @@ namespace TabloidCLI.UserInterfaceManagers
             }
             else
             {
+                Console.WriteLine("Search Results");
                 results.Display();
             }
         }
@@ -92,7 +95,33 @@ namespace TabloidCLI.UserInterfaceManagers
             }
             else
             {
+                Console.WriteLine("Search Results");
                 results.Display();
+            }
+        }
+        private void SearchAll()
+        {
+            Console.Write("Tag> ");
+            string tagName = Console.ReadLine();
+
+            SearchResults<Blog> blogResults = _tagRepository.SearchBlogs(tagName);
+            SearchResults<Author> authorResults = _tagRepository.SearchAuthors(tagName);
+            SearchResults<Post> postResults = _tagRepository.SearchPosts(tagName);
+
+            if (blogResults.NoResultsFound && authorResults.NoResultsFound && postResults.NoResultsFound)
+            {
+                Console.WriteLine($"No results for {tagName}");
+            }
+            else
+            {
+                Console.WriteLine(blogResults.NoResultsFound ? "No matching tags in Blogs" : $"{tagName} in Blogs");
+                blogResults.Display();
+
+                Console.WriteLine(authorResults.NoResultsFound ? "No matching tags in Authors" : $"{tagName} in Authors");
+                authorResults.Display();
+
+                Console.WriteLine(postResults.NoResultsFound ? "No matching tags in Posts" : $"{tagName} in Posts");
+                postResults.Display();
             }
         }
     }
