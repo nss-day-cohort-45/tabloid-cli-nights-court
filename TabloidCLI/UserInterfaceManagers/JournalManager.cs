@@ -19,6 +19,7 @@ namespace TabloidCLI.UserInterfaceManagers
             _connectionString = connectionString;
         }
 
+        //Journal Menu
         public IUserInterfaceManager Execute()
         {
             Console.WriteLine("Journal Menu");
@@ -53,6 +54,7 @@ namespace TabloidCLI.UserInterfaceManagers
             }
         }
 
+        //Display the list of Journal Entries
         private void List()
         {
             List<Journal> journals = _journalRepository.GetAll();
@@ -65,6 +67,7 @@ namespace TabloidCLI.UserInterfaceManagers
             Console.WriteLine("");
         }
 
+        //Add a new Journal Entry
         private void Add()
         {
             List<Journal> journals = _journalRepository.GetAll();
@@ -91,6 +94,7 @@ namespace TabloidCLI.UserInterfaceManagers
 
         }
 
+        //Choose a Journal Entry to do something with
         private Journal Choose(string prompt = null)
         {
             Console.Clear();
@@ -125,6 +129,7 @@ namespace TabloidCLI.UserInterfaceManagers
             }
         }
 
+        //Delete a Journal Entry
         private void Remove()
         {
             Console.Clear();

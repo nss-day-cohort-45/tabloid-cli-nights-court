@@ -10,6 +10,7 @@ namespace TabloidCLI
     {
         public JournalRepository(string connectionString) : base(connectionString) { }
 
+        //List all journal entries
         public List<Journal> GetAll()
         {
             using (SqlConnection conn = Connection)
@@ -44,6 +45,7 @@ namespace TabloidCLI
                 }
             }
         }
+        //add new Journal Entries
         public void Insert(Journal journal)
         {
             using (SqlConnection conn = Connection)
@@ -67,6 +69,7 @@ namespace TabloidCLI
             throw new NotImplementedException();
         }
 
+        //Remove Journal Entries
        public void Delete(int id)
        {
             using (SqlConnection conn = Connection)
