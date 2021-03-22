@@ -79,18 +79,14 @@ namespace TabloidCLI.UserInterfaceManagers
             Author postAuthor = null;
             Blog postBlog = null;
             DateTime postDate = new DateTime();
-
             Console.Clear();
-            Console.Write("Post title: ");
-            string postTitle = Console.ReadLine();
-
+            string postTitle = StringPrompt("Post title: ");
             Console.Clear();
-            Console.Write("Post url: ");
-            string postUrl = Console.ReadLine();
+            string postUrl = StringPrompt("Post url: ");
 
             bool enteringDate = true;
             while (enteringDate)
-            {                
+            {
                 Console.Write("Post publication date (mm/dd/yyyy): ");
                 string dateInput = Console.ReadLine();
                 try
@@ -114,9 +110,8 @@ namespace TabloidCLI.UserInterfaceManagers
                 {
                     Author author = authors[i];
                     Console.WriteLine($"{author.Id} - {author.FullName}");
-                }
-                Console.Write("> ");
-                string input = Console.ReadLine();
+                }                
+                string input = StringPrompt("> ");
                 try
                 {
                     Console.Clear();
@@ -174,11 +169,173 @@ namespace TabloidCLI.UserInterfaceManagers
         }
         private void Edit()
         {
+            Console.Clear();
 
+
+            Post postToEdit = Choose("Which post would you like to edit?");
+            if (postToEdit == null)
+            {
+                return;
+            }
+
+            Console.WriteLine();            
+            string newTitle = StringPrompt("New title (blank to leave unchanged): ");
+            if (!string.IsNullOrWhiteSpace(newTitle))
+            {
+                postToEdit.Title = newTitle;
+            }
+
+            string newUrl = StringPrompt("New URL (blank to leave unchanged): ");
+            if (!string.IsNullOrWhiteSpace(newUrl))
+            {
+                postToEdit.Url = newUrl;
+            }
+
+            bool enteringDate = true;
+            while (enteringDate)
+            {
+                DateTime newDate = new DateTime();                
+                string dateInput = StringPrompt("New post publication date (mm/dd/yyyy) - blank to leave unchanged: ");
+                if (string.IsNullOrWhiteSpace(dateInput))
+                {
+                    enteringDate = false;
+                }
+                else
+                {
+                    try
+                    {
+                        newDate = DateTime.Parse(dateInput);
+                        postToEdit.PublishDateTime = newDate;
+                        enteringDate = false;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Invalid date");
+                    }
+                }
+            }
+
+            bool enteringAuthor = true;
+            List<Author> authors = _authorRepository.GetAll();
+            while (enteringAuthor)
+            {
+                Console.WriteLine("Please choose the post's Author (blank to leave unchanged):");
+
+                for (int i = 0; i < authors.Count; i++)
+                {
+                    Author author = authors[i];
+                    Console.WriteLine($"{author.Id} - {author.FullName}");
+                }
+                
+                string input = StringPrompt("> ");
+                if (string.IsNullOrWhiteSpace(input))
+                {                    
+                    enteringAuthor = false;
+                }
+                else
+                {
+                    try
+                    {
+                        Console.Clear();
+                        int choice = int.Parse(input);
+                        postToEdit.Author = authors.Find(a => a.Id == choice);
+                        enteringAuthor = false;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Invalid Selection");
+                    }
+                }
+            }
+
+            bool enteringBlog = true;
+            List<Blog> blogs = _blogRepository.GetAll();
+            while (enteringBlog)
+            {
+                Console.WriteLine("Please choose the post's Blog (blank to leave unchanged):");
+
+                for (int i = 0; i < blogs.Count; i++)
+                {
+                    Blog blog = blogs[i];
+                    Console.WriteLine($"{blog.Id} - {blog.Title}");
+                }
+                Console.Write("> ");
+                string input = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(input))
+                {
+                    enteringBlog = false;
+                }
+                else
+                {
+
+                    try
+                    {
+                        Console.Clear();
+                        int choice = int.Parse(input);
+                        postToEdit.Blog = blogs.Find(b => b.Id == choice);
+                        enteringBlog = false;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Invalid Selection");
+                    }
+                }
+            }
+
+            _postRepository.Update(postToEdit);
+            Console.Clear();
+            Console.WriteLine($"Post \"{postToEdit.Title}\" was successfully edited.");
+            Console.WriteLine();
         }
         private void Remove()
         {
 
+        }
+        private Post Choose(string prompt = null)
+        {
+            Console.Clear();
+            if (prompt == null)
+            {
+                prompt = "Please choose a Post:";
+            }
+
+            Console.WriteLine(prompt);
+
+            List<Post> posts = _postRepository.GetAll();
+
+            for (int i = 0; i < posts.Count; i++)
+            {
+                Post post = posts[i];
+                Console.WriteLine($" {i + 1}) {post.Title}");
+            }
+            Console.Write("> ");
+
+            string input = Console.ReadLine();
+            try
+            {
+                Console.Clear();
+                int choice = int.Parse(input);
+                return posts[choice - 1];
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine("Invalid Selection");
+                return null;
+            }
+        }
+        /// <summary>
+        /// prints the message parameter 
+        /// as a prompt for the user, returns user input as a string
+        /// </summary>
+        private string StringPrompt(string message)
+        {
+            Console.Write(message);
+            string output = Console.ReadLine();
+            return output;
         }
     }
 }
