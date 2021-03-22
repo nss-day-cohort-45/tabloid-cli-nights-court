@@ -6,11 +6,12 @@ namespace TabloidCLI.UserInterfaceManagers
 {
     class BackgroundColor : IUserInterfaceManager
     {
-        private  IUserInterfaceManager _parentUI;
-        public BackgroundColor(IUserInterfaceManager parentUI)
+        private  IUserInterfaceManager _parentUI; 
+        public BackgroundColor(IUserInterfaceManager parentUI) //does not need a connection string
         {
             _parentUI = parentUI;
         }
+        
         public IUserInterfaceManager Execute()
         {
 
@@ -31,7 +32,7 @@ namespace TabloidCLI.UserInterfaceManagers
 
             Console.Write("> ");
             string choice = Console.ReadLine();
-            Console.Clear();
+            Console.Clear(); //clear console before returning to set entire backgroun not use text background
             switch (choice)
             {
                 case "1":
