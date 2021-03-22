@@ -57,6 +57,11 @@ namespace TabloidCLI.UserInterfaceManagers
             Console.WriteLine($"Post title: {post.Title}");
             Console.WriteLine($"Post URL: {post.Url}");
             Console.WriteLine($"Post publication date: {post.PublishDateTime.ToString("D")}");
+            Console.WriteLine("Tags:");
+            foreach (Tag tag in post.Tags)
+            {
+                Console.WriteLine(" " + tag);
+            }
             Console.WriteLine();
             Console.Write("Press any key to continue...");
             Console.ReadKey();
