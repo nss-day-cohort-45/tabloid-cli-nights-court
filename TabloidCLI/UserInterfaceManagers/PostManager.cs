@@ -292,7 +292,15 @@ namespace TabloidCLI.UserInterfaceManagers
         }
         private void Remove()
         {
-
+            Console.Clear();
+            Post postToDelete = Choose("Which post would you like to remove?");
+            if (postToDelete != null)
+            {
+                _postRepository.Delete(postToDelete.Id);
+            }
+            Console.Clear();
+            Console.WriteLine($"{postToDelete.Title} was successfully removed.");
+            Console.WriteLine();
         }
         private Post Choose(string prompt = null)
         {
