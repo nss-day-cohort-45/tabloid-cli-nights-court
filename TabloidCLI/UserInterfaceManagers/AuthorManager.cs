@@ -175,9 +175,9 @@ namespace TabloidCLI.UserInterfaceManagers
             if (authorToDelete != null)
             {
                 _authorRepository.Delete(authorToDelete.Id);
+                Console.Clear();
+                Console.WriteLine($"{authorToDelete.FirstName} {authorToDelete.LastName} was successfully removed.");
             }
-            Console.Clear();
-            Console.WriteLine($"{authorToDelete.FirstName} {authorToDelete.LastName} was successfully removed.");
             Console.WriteLine();
         }
     }
