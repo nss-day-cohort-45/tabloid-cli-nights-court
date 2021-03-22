@@ -19,13 +19,14 @@ namespace TabloidCLI.UserInterfaceManagers
             _connectionString = connectionString;
         }
 
+        //Journal Menu
         public IUserInterfaceManager Execute()
         {
             Console.WriteLine("Journal Menu");
-            Console.WriteLine(" 1) List Journal");
-            Console.WriteLine(" 2) Add Journal");
-            Console.WriteLine(" 3) Edit Journal");
-            Console.WriteLine(" 4) Remove Journal");
+            Console.WriteLine(" 1) List Journal Entries");
+            Console.WriteLine(" 2) Add Journal Entries");
+            Console.WriteLine(" 3) Edit Journal Entries");
+            Console.WriteLine(" 4) Remove Journal Entries");
             Console.WriteLine(" 0) Return to Main Menu");
 
             Console.Write("> ");
@@ -53,6 +54,7 @@ namespace TabloidCLI.UserInterfaceManagers
             }
         }
 
+        //Display the list of Journal Entries
         private void List()
         {
             List<Journal> journals = _journalRepository.GetAll();
@@ -65,6 +67,7 @@ namespace TabloidCLI.UserInterfaceManagers
             Console.WriteLine("");
         }
 
+        //Add a new Journal Entry
         private void Add()
         {
             List<Journal> journals = _journalRepository.GetAll();
@@ -88,9 +91,38 @@ namespace TabloidCLI.UserInterfaceManagers
         }
         private void Edit()
         {
+            Journal JournalEntryToEdit = Choose("Which journal entry would you like to edit?");
+            if (JournalEntryToEdit == null)
+            {
+                return;
+            }
 
+            Console.WriteLine();
+            Console.Write("New journal entry title (blank to leave unchanged): ");
+            string title = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(title))
+            {
+                JournalEntryToEdit.Title = title;
+            };
+
+            Console.Write("New Content (blank to leave unchanged): ");
+            string content = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(content))
+            {
+                JournalEntryToEdit.Content = content;
+            };
+
+           
+
+
+            _journalRepository.Update(JournalEntryToEdit);
+
+            Console.Clear();
+            Console.WriteLine($"{JournalEntryToEdit.Title} : {JournalEntryToEdit.Content} was successfully edited.");
+            Console.WriteLine();
         }
 
+        //Choose a Journal Entry to do something with
         private Journal Choose(string prompt = null)
         {
             Console.Clear();
@@ -125,6 +157,7 @@ namespace TabloidCLI.UserInterfaceManagers
             }
         }
 
+        //Delete a Journal Entry
         private void Remove()
         {
             Console.Clear();
