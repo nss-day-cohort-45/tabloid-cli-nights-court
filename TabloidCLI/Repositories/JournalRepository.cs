@@ -10,6 +10,7 @@ namespace TabloidCLI
     {
         public JournalRepository(string connectionString) : base(connectionString) { }
 
+        //List all journal entries
         public List<Journal> GetAll()
         {
             using (SqlConnection conn = Connection)
@@ -44,6 +45,7 @@ namespace TabloidCLI
                 }
             }
         }
+        //add new Journal Entries
         public void Insert(Journal journal)
         {
             using (SqlConnection conn = Connection)
@@ -62,11 +64,31 @@ namespace TabloidCLI
             }
         }
 
-       public void Update(Journal journals)
+       //edit or update journal entry  
+       public void Update(Journal journal)
         {
-            throw new NotImplementedException();
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"UPDATE Journal 
+                                           SET Title = @title,
+                                               Content = @content,
+                                               CreateDateTime = @createDateTime
+                                         WHERE id = @id";
+
+                    cmd.Parameters.AddWithValue("@title", journal.Title);
+                    cmd.Parameters.AddWithValue("@content", journal.Content);
+                    cmd.Parameters.AddWithValue("@createDateTime", journal.CreateDateTime);
+                    cmd.Parameters.AddWithValue("@id", journal.Id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
+        //Remove Journal Entries
        public void Delete(int id)
        {
             using (SqlConnection conn = Connection)
