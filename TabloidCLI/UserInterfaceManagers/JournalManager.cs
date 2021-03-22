@@ -23,10 +23,10 @@ namespace TabloidCLI.UserInterfaceManagers
         public IUserInterfaceManager Execute()
         {
             Console.WriteLine("Journal Menu");
-            Console.WriteLine(" 1) List Journal");
-            Console.WriteLine(" 2) Add Journal");
-            Console.WriteLine(" 3) Edit Journal");
-            Console.WriteLine(" 4) Remove Journal");
+            Console.WriteLine(" 1) List Journal Entries");
+            Console.WriteLine(" 2) Add Journal Entries");
+            Console.WriteLine(" 3) Edit Journal Entries");
+            Console.WriteLine(" 4) Remove Journal Entries");
             Console.WriteLine(" 0) Return to Main Menu");
 
             Console.Write("> ");
@@ -103,22 +103,19 @@ namespace TabloidCLI.UserInterfaceManagers
             if (!string.IsNullOrWhiteSpace(title))
             {
                 JournalEntryToEdit.Title = title;
-            }
+            };
+
             Console.Write("New Content (blank to leave unchanged): ");
             string content = Console.ReadLine();
             if (!string.IsNullOrWhiteSpace(content))
             {
                 JournalEntryToEdit.Content = content;
-            }
-            Console.Write("New Date (blank to leave unchanged): ");
-            DateTime date = DateTime.Parse(Console.ReadLine());
-            if (!date.HasValue) //how to check for date time????
-            {
-                JournalEntryToEdit.Content = date;
-            }
+            };
+
+           
 
 
-            JournalEntryToEdit.Update(JournalEntryToEdit);
+            _journalRepository.Update(JournalEntryToEdit);
 
             Console.Clear();
             Console.WriteLine($"{JournalEntryToEdit.Title} : {JournalEntryToEdit.Content} was successfully edited.");

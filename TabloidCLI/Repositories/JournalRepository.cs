@@ -64,6 +64,7 @@ namespace TabloidCLI
             }
         }
 
+       //edit or update journal entry  
        public void Update(Journal journal)
         {
             using (SqlConnection conn = Connection)
