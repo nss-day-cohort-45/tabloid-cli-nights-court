@@ -91,7 +91,38 @@ namespace TabloidCLI.UserInterfaceManagers
         }
         private void Edit()
         {
+            Journal JournalEntryToEdit = Choose("Which journal entry would you like to edit?");
+            if (JournalEntryToEdit == null)
+            {
+                return;
+            }
 
+            Console.WriteLine();
+            Console.Write("New journal entry title (blank to leave unchanged): ");
+            string title = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(title))
+            {
+                JournalEntryToEdit.Title = title;
+            }
+            Console.Write("New Content (blank to leave unchanged): ");
+            string content = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(content))
+            {
+                JournalEntryToEdit.Content = content;
+            }
+            Console.Write("New Date (blank to leave unchanged): ");
+            DateTime date = DateTime.Parse(Console.ReadLine());
+            if (!date.HasValue) //how to check for date time????
+            {
+                JournalEntryToEdit.Content = date;
+            }
+
+
+            JournalEntryToEdit.Update(JournalEntryToEdit);
+
+            Console.Clear();
+            Console.WriteLine($"{JournalEntryToEdit.Title} : {JournalEntryToEdit.Content} was successfully edited.");
+            Console.WriteLine();
         }
 
         //Choose a Journal Entry to do something with
