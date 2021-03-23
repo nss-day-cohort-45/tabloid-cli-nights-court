@@ -58,12 +58,12 @@ namespace TabloidCLI
                                                a.LastName,
                                                a.Bio,
                                                t.Id AS TagId,
-                                               t.Name
+                                               t.Name, 
+                                               at.IsDeleted as AtIsDeleted
                                           FROM Author a 
                                                LEFT JOIN AuthorTag at on a.Id = at.AuthorId
                                                LEFT JOIN Tag t on t.Id = at.TagId
-                                         WHERE a.id = @id
-                                         WHERE IsDeleted = 0 AND at.IsDeleted = 0 AND t.IsDeleted = 0";
+                                         WHERE a.id = @id";
 
                     cmd.Parameters.AddWithValue("@id", id);
 
@@ -85,11 +85,14 @@ namespace TabloidCLI
 
                         if (!reader.IsDBNull(reader.GetOrdinal("TagId")))
                         {
-                            author.Tags.Add(new Tag()
-                            {
-                                Id = reader.GetInt32(reader.GetOrdinal("TagId")),
-                                Name = reader.GetString(reader.GetOrdinal("Name")),
-                            });
+                            if (!reader.GetBoolean(reader.GetOrdinal("AtIsDeleted")))
+                                {
+                                author.Tags.Add(new Tag()
+                                {
+                                    Id = reader.GetInt32(reader.GetOrdinal("TagId")),
+                                    Name = reader.GetString(reader.GetOrdinal("Name")),
+                                });
+                            }
                         }
                     }
 
@@ -151,6 +154,26 @@ namespace TabloidCLI
                     cmd.CommandText = @"UPDATE Author 
                                             SET IsDeleted = 1                                           
                                             WHERE id = @id";
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    cmd.ExecuteNonQuery();
+                }
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"UPDATE Post 
+                                            SET IsDeleted = 1                                           
+                                            WHERE AuthorId = @id";
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    cmd.ExecuteNonQuery();
+                }
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"UPDATE AuthorTag 
+                                            SET IsDeleted = 1                                           
+                                            WHERE AuthorId = @id";
                     cmd.Parameters.AddWithValue("@id", id);
 
                     cmd.ExecuteNonQuery();
