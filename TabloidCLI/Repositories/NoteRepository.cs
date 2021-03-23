@@ -22,7 +22,8 @@ namespace TabloidCLI
                                                Content,
                                                CreateDateTime,
                                                PostId
-                                          FROM Note";
+                                          FROM Note
+                                      WHERE IsDeleted = 0";
 
                     List<Note> notes = new List<Note>();
 
@@ -115,7 +116,9 @@ namespace TabloidCLI
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"DELETE FROM Note WHERE id = @id";
+                    cmd.CommandText = @"UPDATE Note
+                                             SET IsDeleted = 1
+                                             WHERE id = @id";
                     cmd.Parameters.AddWithValue("@id", id);
 
                     cmd.ExecuteNonQuery();
