@@ -77,7 +77,7 @@ namespace TabloidCLI
                                                LEFT JOIN Blog b on p.BlogId = b.Id 
                                                LEFT JOIN PostTag pt on p.Id = pt.PostId
                                                LEFT JOIN Tag t on t.Id = pt.TagId
-                                         WHERE p.Id = @id AND p.IsDeleted = 0 AND pt.IsDeleted = 0";
+                                         WHERE p.Id = @id AND p.IsDeleted = 0 AND pt.IsDeleted = 0 AND t.IsDeleted = 0";
                     cmd.Parameters.AddWithValue("@id", id);
                     SqlDataReader reader = cmd.ExecuteReader();
                     Post post = null;
@@ -144,7 +144,7 @@ namespace TabloidCLI
                                           FROM Post p 
                                                LEFT JOIN Author a on p.AuthorId = a.Id
                                                LEFT JOIN Blog b on p.BlogId = b.Id 
-                                         WHERE p.BlogId = @blogId AND p.IsDeleted = 0 AND b.IsDeleted = 0";
+                                         WHERE p.BlogId = @blogId AND p.IsDeleted = 0 AND a.IsDeleted = 0 AND b.IsDeleted = 0";
                     cmd.Parameters.AddWithValue("@blogId", blogId);
                     SqlDataReader reader = cmd.ExecuteReader();
 
@@ -202,7 +202,7 @@ namespace TabloidCLI
                                           FROM Post p 
                                                LEFT JOIN Author a on p.AuthorId = a.Id
                                                LEFT JOIN Blog b on p.BlogId = b.Id 
-                                         WHERE p.AuthorId = @authorId AND p.IsDeleted = 0";
+                                         WHERE p.AuthorId = @authorId AND p.IsDeleted = 0 AND a.IsDeleted = 0 AND b.IsDeleted = 0";
                     cmd.Parameters.AddWithValue("@authorId", authorId);
                     SqlDataReader reader = cmd.ExecuteReader();
 
