@@ -27,7 +27,7 @@ namespace TabloidCLI.UserInterfaceManagers
             Console.WriteLine(" 3) Add Blog");
             Console.WriteLine(" 4) Edit Blog");
             Console.WriteLine(" 5) Remove Blog");
-            Console.WriteLine(" 0) Go Back");
+            Console.WriteLine(" 0) Return to Main Menu");
 
             Console.Write("> ");
             string choice = Console.ReadLine();
