@@ -22,6 +22,7 @@ namespace TabloidCLI.UserInterfaceManagers
 
         public IUserInterfaceManager Execute()
         {
+            //Note Menu
             Console.WriteLine("Note Menu");
             Console.WriteLine(" 1) List Notes");
             Console.WriteLine(" 2) Add Note");
@@ -53,6 +54,7 @@ namespace TabloidCLI.UserInterfaceManagers
             }
         }
 
+        //List all the current Notes
         private void List()
         {
             Console.Clear();
@@ -69,6 +71,7 @@ namespace TabloidCLI.UserInterfaceManagers
             Console.WriteLine();
         }
 
+        //Choose a specfic Note
         private Note Choose(string prompt = null)
         {
             Console.Clear();
@@ -103,6 +106,7 @@ namespace TabloidCLI.UserInterfaceManagers
             }
         }
 
+        //add a new note
         private void Add()
         {
             
@@ -125,9 +129,6 @@ namespace TabloidCLI.UserInterfaceManagers
             Console.Write("Content: ");
             note.Content = Console.ReadLine();
 
-          
-           // _postRepository.GetAll();
-
             _noteRepository.Insert(note);
 
             Console.Clear();
@@ -135,6 +136,7 @@ namespace TabloidCLI.UserInterfaceManagers
             Console.WriteLine();
         }
 
+        //remove notes
         private void Remove()
         {
             Note noteToDelete = Choose("Which note would you like to remove?");
@@ -146,6 +148,8 @@ namespace TabloidCLI.UserInterfaceManagers
             Console.WriteLine($"{noteToDelete.Title} was successfully removed.");
             Console.WriteLine();
         }
+
+        //Chose the post to add the the note.PostId
         private Post ChoosePost(string prompt = null)
         {
             Console.Clear();
