@@ -77,7 +77,6 @@ namespace TabloidCLI
                                                Content = @content,
                                                CreateDateTime = @createDateTime
                                          WHERE id = @id";
-
                     cmd.Parameters.AddWithValue("@title", journal.Title);
                     cmd.Parameters.AddWithValue("@content", journal.Content);
                     cmd.Parameters.AddWithValue("@createDateTime", journal.CreateDateTime);
