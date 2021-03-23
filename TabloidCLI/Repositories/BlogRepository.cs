@@ -58,7 +58,7 @@ namespace TabloidCLI
                                           FROM Blog b 
                                                LEFT JOIN BlogTag at on b.Id = at.BlogId
                                                LEFT JOIN Tag t on t.Id = at.TagId
-                                         WHERE b.id = @id";
+                                         WHERE b.id = @id AND b.isDeleted = 0" ;
 
                     cmd.Parameters.AddWithValue("@id", id);
 
@@ -139,7 +139,9 @@ namespace TabloidCLI
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"DELETE FROM Blog WHERE id = @id";
+                    cmd.CommandText = @"UPDATE BLOG
+                                        SET IsDeleted = 1
+                                        WHERE id = @id";
                     cmd.Parameters.AddWithValue("@id", id);
 
                     cmd.ExecuteNonQuery();
