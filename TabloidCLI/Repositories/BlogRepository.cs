@@ -55,11 +55,12 @@ namespace TabloidCLI
                                                b.Title,
                                                b.Url,
                                                t.Id AS TagId,
-                                               t.Name
+                                               t.Name,
+                                               bt.IsDeleted AS BTIsDeleted
                                           FROM Blog b 
                                                LEFT JOIN BlogTag bt on b.Id = bt.BlogId
                                                LEFT JOIN Tag t on t.Id = bt.TagId
-                                         WHERE b.id = @id AND b.isDeleted = 0 AND bt.isDeleted = 0 AND t.isDeleted = 0" ;
+                                         WHERE b.id = @id";
 
                     cmd.Parameters.AddWithValue("@id", id);
 
@@ -80,11 +81,14 @@ namespace TabloidCLI
 
                         if (!reader.IsDBNull(reader.GetOrdinal("TagId")))
                         {
-                            blog.Tags.Add(new Tag()
+                            if (!reader.GetBoolean(reader.GetOrdinal("BTIsDeleted")))
                             {
-                                Id = reader.GetInt32(reader.GetOrdinal("TagId")),
-                                Name = reader.GetString(reader.GetOrdinal("Name")),
-                            });
+                                blog.Tags.Add(new Tag()
+                                {
+                                    Id = reader.GetInt32(reader.GetOrdinal("TagId")),
+                                    Name = reader.GetString(reader.GetOrdinal("Name")),
+                                });
+                            }
                         }
                     }
 
@@ -143,6 +147,26 @@ namespace TabloidCLI
                     cmd.CommandText = @"UPDATE BLOG
                                         SET IsDeleted = 1
                                         WHERE id = @id";
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    cmd.ExecuteNonQuery();
+                }
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"UPDATE Post
+                                        SET IsDeleted = 1
+                                        WHERE BlogId = @id";
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    cmd.ExecuteNonQuery();
+                }
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"UPDATE BlogTag
+                                        SET IsDeleted = 1
+                                        WHERE BlogId = @id";
                     cmd.Parameters.AddWithValue("@id", id);
 
                     cmd.ExecuteNonQuery();
