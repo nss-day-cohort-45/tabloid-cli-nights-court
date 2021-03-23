@@ -18,7 +18,8 @@ namespace TabloidCLI
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"SELECT Title, URL, PublishDateTime, AuthorId, BlogId, Id
-                                            FROM Post";
+                                            FROM Post
+                                            WHERE IsDeleted = 0";
 
                     List<Post> posts = new List<Post>();
                     SqlDataReader reader = cmd.ExecuteReader();
@@ -76,7 +77,7 @@ namespace TabloidCLI
                                                LEFT JOIN Blog b on p.BlogId = b.Id 
                                                LEFT JOIN PostTag pt on p.Id = pt.PostId
                                                LEFT JOIN Tag t on t.Id = pt.TagId
-                                         WHERE p.Id = @id";
+                                         WHERE p.Id = @id AND p.IsDeleted = 0";
                     cmd.Parameters.AddWithValue("@id", id);
                     SqlDataReader reader = cmd.ExecuteReader();
                     Post post = null;
@@ -143,7 +144,7 @@ namespace TabloidCLI
                                           FROM Post p 
                                                LEFT JOIN Author a on p.AuthorId = a.Id
                                                LEFT JOIN Blog b on p.BlogId = b.Id 
-                                         WHERE p.BlogId = @blogId";
+                                         WHERE p.BlogId = @blogId AND p.IsDeleted = 0";
                     cmd.Parameters.AddWithValue("@blogId", blogId);
                     SqlDataReader reader = cmd.ExecuteReader();
 
@@ -201,7 +202,7 @@ namespace TabloidCLI
                                           FROM Post p 
                                                LEFT JOIN Author a on p.AuthorId = a.Id
                                                LEFT JOIN Blog b on p.BlogId = b.Id 
-                                         WHERE p.AuthorId = @authorId";
+                                         WHERE p.AuthorId = @authorId AND p.IsDeleted = 0";
                     cmd.Parameters.AddWithValue("@authorId", authorId);
                     SqlDataReader reader = cmd.ExecuteReader();
 
@@ -291,7 +292,9 @@ namespace TabloidCLI
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"DELETE FROM Post WHERE id = @id";
+                    cmd.CommandText = @"UPDATE Post
+                                            SET IsDeleted = 1
+                                            WHERE id = @id";
                     cmd.Parameters.AddWithValue("@id", id);
 
                     cmd.ExecuteNonQuery();
@@ -322,7 +325,8 @@ namespace TabloidCLI
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"DELETE FROM PostTag
+                    cmd.CommandText = @"UPDATE PostTag
+                                            SET IsDeleted = 1
                                             WHERE PostId = @postId AND
                                                   TagId = @tagId";
                     cmd.Parameters.AddWithValue("@postId", postId);

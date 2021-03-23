@@ -21,7 +21,8 @@ namespace TabloidCLI
                                                FirstName,
                                                LastName,
                                                Bio
-                                          FROM Author";
+                                          FROM Author
+                                          WHERE IsDeleted = 0";
 
                     List<Author> authors = new List<Author>();
 
@@ -61,7 +62,8 @@ namespace TabloidCLI
                                           FROM Author a 
                                                LEFT JOIN AuthorTag at on a.Id = at.AuthorId
                                                LEFT JOIN Tag t on t.Id = at.TagId
-                                         WHERE a.id = @id";
+                                         WHERE a.id = @id
+                                         WHERE IsDeleted = 0";
 
                     cmd.Parameters.AddWithValue("@id", id);
 
@@ -146,7 +148,9 @@ namespace TabloidCLI
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"DELETE FROM Author WHERE id = @id";
+                    cmd.CommandText = @"UPDATE Author 
+                                            SET IsDeleted = 1                                           
+                                            WHERE id = @id";
                     cmd.Parameters.AddWithValue("@id", id);
 
                     cmd.ExecuteNonQuery();
@@ -177,8 +181,9 @@ namespace TabloidCLI
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"DELETE FROM AuthorTAg 
-                                         WHERE AuthorId = @authorid AND 
+                    cmd.CommandText = @"UPDATE AuthorTag 
+                                            SET IsDeleted = 1
+                                            WHERE AuthorId = @authorid AND 
                                                TagId = @tagId";
                     cmd.Parameters.AddWithValue("@authorId", authorId);
                     cmd.Parameters.AddWithValue("@tagId", tagId);
