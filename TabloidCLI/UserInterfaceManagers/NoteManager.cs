@@ -9,6 +9,7 @@ namespace TabloidCLI.UserInterfaceManagers
     {
         private readonly IUserInterfaceManager _parentUI;
         private NoteRepository _noteRepository;
+        private PostRepository _postRepository;
         private string _connectionString;
 
         public NoteManager(IUserInterfaceManager parentUI, string connectionString)
@@ -16,10 +17,12 @@ namespace TabloidCLI.UserInterfaceManagers
             _parentUI = parentUI;
             _noteRepository = new NoteRepository(connectionString);
             _connectionString = connectionString;
+            _postRepository = new PostRepository(connectionString);
         }
 
         public IUserInterfaceManager Execute()
         {
+            //Note Menu
             Console.WriteLine("Note Menu");
             Console.WriteLine(" 1) List Notes");
             Console.WriteLine(" 2) Add Note");
@@ -51,6 +54,7 @@ namespace TabloidCLI.UserInterfaceManagers
             }
         }
 
+        //List all the current Notes
         private void List()
         {
             Console.Clear();
@@ -67,6 +71,7 @@ namespace TabloidCLI.UserInterfaceManagers
             Console.WriteLine();
         }
 
+        //Choose a specfic Note
         private Note Choose(string prompt = null)
         {
             Console.Clear();
@@ -101,20 +106,28 @@ namespace TabloidCLI.UserInterfaceManagers
             }
         }
 
+        //add a new note
         private void Add()
         {
+            
             Console.Clear();
             Console.WriteLine("New Note");
             Note note = new Note();
+
+            Post PostToAdd  = ChoosePost("Which post would you like to make a note on?");
+            if (PostToAdd == null)
+            {
+                Console.WriteLine("post to add was null");
+                return;
+            }
+            note.PostId = PostToAdd.Id;
+
 
             Console.Write("Title: ");
             note.Title = Console.ReadLine();
 
             Console.Write("Content: ");
             note.Content = Console.ReadLine();
-
-            Console.WriteLine("Post ID: ");
-            note.PostId = Int32.Parse(Console.ReadLine());
 
             _noteRepository.Insert(note);
 
@@ -123,6 +136,7 @@ namespace TabloidCLI.UserInterfaceManagers
             Console.WriteLine();
         }
 
+        //remove notes
         private void Remove()
         {
             Note noteToDelete = Choose("Which note would you like to remove?");
@@ -133,6 +147,41 @@ namespace TabloidCLI.UserInterfaceManagers
             Console.Clear();
             Console.WriteLine($"{noteToDelete.Title} was successfully removed.");
             Console.WriteLine();
+        }
+
+        //Chose the post to add the the note.PostId
+        private Post ChoosePost(string prompt = null)
+        {
+            Console.Clear();
+            if (prompt == null)
+            {
+                prompt = "Please choose a Post:";
+            }
+
+            Console.WriteLine(prompt);
+
+            List<Post> posts = _postRepository.GetAll();
+
+            for (int i = 0; i < posts.Count; i++)
+            {
+                Post post = posts[i];
+                Console.WriteLine($" {i + 1}) {post.Title}");
+            }
+            Console.Write("> ");
+
+            string input = Console.ReadLine();
+            try
+            {
+                Console.Clear();
+                int choice = int.Parse(input);
+                return posts[choice - 1];
+            }
+            catch (Exception )
+            {
+                Console.Clear();
+                Console.WriteLine("Invalid Selection");
+                return null;
+            }
         }
     }
 }
