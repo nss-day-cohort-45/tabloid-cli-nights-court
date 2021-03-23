@@ -86,7 +86,7 @@ namespace TabloidCLI
                         if (!reader.IsDBNull(reader.GetOrdinal("TagId")))
                         {
                             if (!reader.GetBoolean(reader.GetOrdinal("AtIsDeleted")))
-                                {
+                            {
                                 author.Tags.Add(new Tag()
                                 {
                                     Id = reader.GetInt32(reader.GetOrdinal("TagId")),

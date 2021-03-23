@@ -313,6 +313,16 @@ namespace TabloidCLI
 
                     cmd.ExecuteNonQuery();
                 }
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"UPDATE Note
+                                            SET IsDeleted = 1
+                                            WHERE PostId = @id";
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    cmd.ExecuteNonQuery();
+                }
             }
         }
 
