@@ -9,6 +9,7 @@ namespace TabloidCLI.UserInterfaceManagers
     {
         private readonly IUserInterfaceManager _parentUI;
         private NoteRepository _noteRepository;
+        private PostRepository _postRepository;
         private string _connectionString;
 
         public NoteManager(IUserInterfaceManager parentUI, string connectionString)
@@ -16,6 +17,7 @@ namespace TabloidCLI.UserInterfaceManagers
             _parentUI = parentUI;
             _noteRepository = new NoteRepository(connectionString);
             _connectionString = connectionString;
+            _postRepository = new PostRepository(connectionString);
         }
 
         public IUserInterfaceManager Execute()
@@ -103,9 +105,19 @@ namespace TabloidCLI.UserInterfaceManagers
 
         private void Add()
         {
+            
             Console.Clear();
             Console.WriteLine("New Note");
             Note note = new Note();
+
+            Post PostToAdd  = ChoosePost("Which post would you like to make a note on?");
+            if (PostToAdd == null)
+            {
+                Console.WriteLine("post to add was null");
+                return;
+            }
+            note.PostId = PostToAdd.Id;
+
 
             Console.Write("Title: ");
             note.Title = Console.ReadLine();
@@ -113,8 +125,8 @@ namespace TabloidCLI.UserInterfaceManagers
             Console.Write("Content: ");
             note.Content = Console.ReadLine();
 
-            Console.WriteLine("Post ID: ");
-            note.PostId = Int32.Parse(Console.ReadLine());
+          
+           // _postRepository.GetAll();
 
             _noteRepository.Insert(note);
 
@@ -133,6 +145,39 @@ namespace TabloidCLI.UserInterfaceManagers
             Console.Clear();
             Console.WriteLine($"{noteToDelete.Title} was successfully removed.");
             Console.WriteLine();
+        }
+        private Post ChoosePost(string prompt = null)
+        {
+            Console.Clear();
+            if (prompt == null)
+            {
+                prompt = "Please choose a Post:";
+            }
+
+            Console.WriteLine(prompt);
+
+            List<Post> posts = _postRepository.GetAll();
+
+            for (int i = 0; i < posts.Count; i++)
+            {
+                Post post = posts[i];
+                Console.WriteLine($" {i + 1}) {post.Title}");
+            }
+            Console.Write("> ");
+
+            string input = Console.ReadLine();
+            try
+            {
+                Console.Clear();
+                int choice = int.Parse(input);
+                return posts[choice - 1];
+            }
+            catch (Exception )
+            {
+                Console.Clear();
+                Console.WriteLine("Invalid Selection");
+                return null;
+            }
         }
     }
 }
