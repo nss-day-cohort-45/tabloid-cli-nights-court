@@ -63,7 +63,7 @@ namespace TabloidCLI
                                                LEFT JOIN AuthorTag at on a.Id = at.AuthorId
                                                LEFT JOIN Tag t on t.Id = at.TagId
                                          WHERE a.id = @id
-                                         WHERE IsDeleted = 0";
+                                         WHERE IsDeleted = 0 AND at.IsDeleted = 0";
 
                     cmd.Parameters.AddWithValue("@id", id);
 
