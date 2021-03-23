@@ -71,13 +71,14 @@ namespace TabloidCLI
                                                b.Title AS BlogTitle,
                                                b.URL AS BlogUrl,
                                                t.Id AS TagId,
-                                               t.Name
+                                               t.Name,
+                                               pt.IsDeleted AS PTIsDeleted
                                           FROM Post p 
                                                LEFT JOIN Author a on p.AuthorId = a.Id
                                                LEFT JOIN Blog b on p.BlogId = b.Id 
                                                LEFT JOIN PostTag pt on p.Id = pt.PostId
                                                LEFT JOIN Tag t on t.Id = pt.TagId
-                                         WHERE p.Id = @id AND p.IsDeleted = 0 AND pt.IsDeleted = 0 AND t.IsDeleted = 0";
+                                         WHERE p.Id = @id";
                     cmd.Parameters.AddWithValue("@id", id);
                     SqlDataReader reader = cmd.ExecuteReader();
                     Post post = null;
@@ -109,11 +110,14 @@ namespace TabloidCLI
 
                         if (!reader.IsDBNull(reader.GetOrdinal("TagId")))
                         {
-                            post.Tags.Add(new Tag()
+                            if (!reader.GetBoolean(reader.GetOrdinal("PTIsDeleted")))
                             {
-                                Id = reader.GetInt32(reader.GetOrdinal("TagId")),
-                                Name = reader.GetString(reader.GetOrdinal("Name"))
-                            });
+                                post.Tags.Add(new Tag()
+                                {
+                                    Id = reader.GetInt32(reader.GetOrdinal("TagId")),
+                                    Name = reader.GetString(reader.GetOrdinal("Name"))
+                                });
+                            }
                         }
                     }
                     reader.Close();
@@ -295,6 +299,16 @@ namespace TabloidCLI
                     cmd.CommandText = @"UPDATE Post
                                             SET IsDeleted = 1
                                             WHERE id = @id";
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    cmd.ExecuteNonQuery();
+                }
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"UPDATE PostTag
+                                            SET IsDeleted = 1
+                                            WHERE PostId = @id";
                     cmd.Parameters.AddWithValue("@id", id);
 
                     cmd.ExecuteNonQuery();

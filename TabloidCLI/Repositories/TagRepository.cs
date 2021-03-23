@@ -94,6 +94,36 @@ namespace TabloidCLI
 
                     cmd.ExecuteNonQuery();
                 }
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"UPDATE PostTag 
+                                             SET IsDeleted = 1                                        
+                                             WHERE TagId = @id";
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    cmd.ExecuteNonQuery();
+                }
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"UPDATE BlogTag 
+                                             SET IsDeleted = 1                                        
+                                             WHERE TagId = @id";
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    cmd.ExecuteNonQuery();
+                }
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"UPDATE AuthorTag 
+                                             SET IsDeleted = 1                                        
+                                             WHERE TagId = @id";
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    cmd.ExecuteNonQuery();
+                }
             }
         }
 
@@ -110,7 +140,7 @@ namespace TabloidCLI
                                           FROM Blog b
                                                LEFT JOIN BlogTag bt on b.Id = bt.BlogId
                                                LEFT JOIN Tag t on t.Id = bt.TagId
-                                         WHERE t.Name LIKE @name AND bt.IsDeleted = 0 AND b.IsDeleted = 0 AND t.IsDeleted = 0";
+                                         WHERE t.Name LIKE @name AND b.IsDeleted = 0 AND (bt.IsDeleted = 0 OR bt.IsDeleted IS NULL)";
                     cmd.Parameters.AddWithValue("@name", $"%{tagName}%");
                     SqlDataReader reader = cmd.ExecuteReader();
 
@@ -147,7 +177,7 @@ namespace TabloidCLI
                                           FROM Author a
                                                LEFT JOIN AuthorTag at on a.Id = at.AuthorId
                                                LEFT JOIN Tag t on t.Id = at.TagId
-                                         WHERE t.Name LIKE @name AND at.IsDeleted = 0 AND a.IsDeleted = 0 AND t.IsDeleted = 0";
+                                         WHERE t.Name LIKE @name AND a.IsDeleted = 0 AND (at.IsDeleted = 0 OR at.IsDeleted IS NULL)";
                     cmd.Parameters.AddWithValue("@name", $"%{tagName}%");
                     SqlDataReader reader = cmd.ExecuteReader();
 
@@ -183,7 +213,7 @@ namespace TabloidCLI
                                           FROM Post p
                                                LEFT JOIN PostTag pt on p.Id = pt.PostId
                                                LEFT JOIN Tag t on t.Id = pt.TagId
-                                         WHERE t.Name LIKE @name AND pt.IsDeleted = 0 AND t.IsDeleted = 0";
+                                         WHERE t.Name LIKE @name AND p.IsDeleted = 0 AND (pt.IsDeleted = 0 OR pt.IsDeleted IS NULL)";
                     cmd.Parameters.AddWithValue("@name", $"%{tagName}%");
                     SqlDataReader reader = cmd.ExecuteReader();
 
