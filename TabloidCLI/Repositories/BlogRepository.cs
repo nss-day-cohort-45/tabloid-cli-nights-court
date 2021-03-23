@@ -20,7 +20,8 @@ namespace TabloidCLI
                     cmd.CommandText = @"SELECT id,
                                                Title,
                                                Url
-                                          FROM Blog";
+                                          FROM Blog
+                                          WHERE isDeleted = 0";
 
                     List<Blog> blogs = new List<Blog>();
 
